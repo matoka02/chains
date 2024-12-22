@@ -1,45 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Longest Digital Puzzle</title>
   <style>
     body {
-        font-family: Arial, sans-serif;
-        margin: 20px;
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
-    input, button {
-        margin: 10px 0;
+
+    input,
+    button {
+      margin: 10px 0;
     }
+
     textarea {
-        width: 100%;
-        height: 100px;
+      width: 100%;
+      height: 100px;
     }
+
     #result {
-        margin-top: 20px;
-        padding: 10px;
-        background: #f4f4f4;
-        border: 1px solid #ddd;
+      margin-top: 20px;
+      padding: 10px;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
     }
-</style>
+  </style>
 </head>
+
 <body>
   <h1>Longest Digital Puzzle</h1>
-    <p>Upload a text file containing number fragments (one per line) to find the longest sequence:</p>
+  <p>Upload a text file containing number fragments (one per line) to find the longest sequence:</p>
 
-    <input type="file" id="fileInput" accept=".txt">
-    <button id="processButton">Find Longest Sequence</button>
+  <input type="file" id="fileInput" accept=".txt">
+  <!-- <button id="processButton">Find Longest Sequence</button> -->
 
-    <h2>Uploaded Fragments:</h2>
-    <textarea id="fragments" readonly></textarea>
+  <!-- <h2>Uploaded Fragments:</h2>
+  <textarea id="fragments" readonly></textarea> -->
 
-    <h2>Result:</h2>
-    <div id="output"></div>
+  <h3>Max Sequence Length (in characters):</h3>
+  <p id="maxLength"></p>
 
-    <!-- <input placeholder="load puzzle file" type="file" id="fileInput"> -->
-    <!-- <div id="output"></div> -->
+  <h2>Result:</h2>
+  <div id="output"></div>
 
-    <script src="/index.js"></script>
+  <script src="/index.js"></script>
 </body>
+
 </html>
