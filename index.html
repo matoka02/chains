@@ -46,7 +46,128 @@
   <h2>Result:</h2>
   <div id="output"></div>
 
-  <script src="/index.js"></script>
+  <!-- <script src="/index.js"></script> -->
+  <script>
+    document.getElementById('fileInput')
+      .addEventListener('change', readFile, false);
+
+    function readFile(e) {
+      let file = e.target.files[0];
+      let output = document.getElementById('output');
+      let maxLengthElement = document.getElementById('maxLength');
+
+      if (!file) {
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        let contents = e.target.result;
+
+        let numbers = contents.indexOf('\r') ? contents.split('\r\n') : contents.split('\n');
+        let puzzle = completePuzzle(numbers);
+
+        output.innerText = puzzle;
+
+        maxLengthElement.innerText = `Length: ${puzzle.length}`;
+      };
+
+      output.innerText = 'Solving puzzle...';
+      reader.readAsText(file);
+    }
+
+    function completePuzzle(numbers) {
+      let totalLength = numbers.reduce((acc, el) => acc += el.length, 0);
+
+      let firstNumberIndex = findFirstNumber(numbers);
+      let result = numbers[firstNumberIndex];
+      removeFromArray(numbers, firstNumberIndex);
+
+      result += tryCompletePuzzle(takeLastDigits(result), [...numbers], result.length);
+
+      return result;
+
+      function tryCompletePuzzle(ld, numbers, offset) {
+        let result = '';
+
+        while (numbers.length) {
+          let lastDigits = result.length ? takeLastDigits(result) : ld;
+
+          let potentialPieces = getPotentialPieces(numbers);
+
+          if (potentialPieces.length > 1) {
+            let potentialSets = [];
+            for (let i = 0; i < potentialPieces.length; i++) {
+              let numbersCopy = [...numbers];
+              removeFromArray(numbersCopy, potentialPieces[i]);
+              let potentialSet = numbers[potentialPieces[i]] +
+                tryCompletePuzzle(takeLastDigits(numbers[potentialPieces[i]]),
+                  numbersCopy,
+                  offset + result.length + numbers[potentialPieces[i]].length);
+
+              potentialSets.push(potentialSet);
+            }
+
+            return result + getLongest(potentialSets);
+          } else if (potentialPieces.length == 1) {
+            result += numbers[potentialPieces[0]];
+            numbers.splice(potentialPieces[0], 1);
+          } else {
+            break;
+          }
+
+          function getPotentialPieces(numbers) {
+            let potentialPieces = [];
+            for (let i = 0; i < numbers.length; i++) {
+              if (numbers[i].startsWith(lastDigits)) {
+                potentialPieces.push(i);
+              }
+            }
+
+            return potentialPieces;
+          }
+
+          function getLongest(array) {
+            let longest = array[0];
+
+            for (let i = 1; i < array.length; i++) {
+              if (longest.length < array[i].length)
+                longest = array[i];
+            }
+
+            return longest;
+          }
+        }
+
+        return result;
+      }
+
+      function takeLastDigits(string) {
+        return string.substring(string.length - 2);
+      }
+
+      function removeFromArray(array, index) {
+        array.splice(index, 1);
+      }
+
+      function findFirstNumber(numbers) {
+        for (let i = 0; i < numbers.length; i++) {
+          if (!subSearch(numbers[i].substring(0, 2), i))
+            return i;
+        }
+
+        function subSearch(number, skipIndex) {
+          for (let j = 0; j < numbers.length; j++) {
+            if (j == skipIndex) continue;
+
+            if (numbers[j].endsWith(number))
+              return true;
+          }
+        }
+      }
+    }
+
+  </script>
 </body>
 
 </html>
